@@ -60,6 +60,10 @@ def change_names(old_string,new_string,path=Path.cwd(),
 
 def change_parent_dir_name(old_string,new_string,path=Path.cwd(),
                            confirm=True):
+    '''
+    Change the name of the specified directory substituing old_string
+    with new_string
+    '''
     
     mylogging = LoggingWrapper()
 
