@@ -24,7 +24,9 @@
 
 import os
 from pathlib import Path
+
 from classes import PseudoCode
+from my_logging import LoggingWrapper
 
 def change_pseudo_code(bad_pcode,good_pcode,path=Path.cwd(),
     opts={'files':True,'dirs':True,'confirm':True}):
@@ -34,6 +36,8 @@ def change_pseudo_code(bad_pcode,good_pcode,path=Path.cwd(),
     assert path.is_dir(), 'Directory does not exists'
     bad_pcode = str(bad_pcode)
     good_pcode = PseudoCode(good_pcode)
+
+    mylogging = LoggingWrapper()
 
     files = [f'{item.name}' for item in path.iterdir() if not item.is_dir()]
     dirs = [f'{item.name}' for item in path.iterdir() if item.is_dir()]
@@ -48,12 +52,12 @@ def change_pseudo_code(bad_pcode,good_pcode,path=Path.cwd(),
                 old_files += [item]
                 new_files += [item.replace(bad_pcode,good_pcode)]
 
-        print('File replacing summary')
-        print('-'*72)
-        print(f'Directory: {path}')
+        mylogging.info('File replacing summary')
+        mylogging.info('-'*72)
+        mylogging.info(f'Directory: {path}')
         for i,(old,new) in enumerate(zip(old_files,new_files)):
-            print(f'{i+1}) {old} ---> {new}')
-        print('-'*72+'\n')
+            mylogging.info(f'{i+1}) {old} ---> {new}')
+        mylogging.info('-'*72+'\n')
 
         if opts['confirm']:
             ans = input('Do you want to proceed?').strip().lower()
@@ -63,9 +67,9 @@ def change_pseudo_code(bad_pcode,good_pcode,path=Path.cwd(),
             for i,(old,new) in enumerate(zip(old_files,new_files)):
                 cmd = f'mv {old} {new}'
                 os.system(cmd)
-            print('Done!\n')
+            mylogging.info('Done!\n')
 
 
 
 if __name__ == '__main__':
-    change_pseudo_code('re','')
+    change_pseudo_code('re','B12345')

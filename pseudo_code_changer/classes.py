@@ -12,5 +12,5 @@ class PseudoCode(str):
         if instance:
             assert len(instance) == 6, 'Pseudo code must contain exactly 6 characters'
             assert instance[0] in ['A','B'], 'First character must be either A or B'
-            assert instance[1:].is_numeric(), 'All but first character must be numbers'
+            assert instance[1:].isnumeric(), 'All but first character must be numbers'
         return instance
