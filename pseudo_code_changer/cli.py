@@ -1,6 +1,9 @@
 """Console script for pseudo_code_changer."""
 import sys
 import click
+from pathlib import Path
+
+from pseudo_code_changer.pseudo_code_changer import change_pseudo_code
 
 
 @click.command()
@@ -18,16 +21,49 @@ import click
               help='Ask for confirmation before changing names')  
 @click.argument('bad_pcode', nargs=1, metavar='<bad_pseudo_code>')
 @click.argument('good_pcode',nargs=1, metavar='<good_pseudo_code>')
-@click.argument('path',nargs=1, metavar='<directory>') 
-def main(file_flag,dir_flag,confirm_flag,bad_pcode,good_pcode,path):
+@click.argument('path', nargs=-1, metavar='<directory>') 
+def main(file_flag,dir_flag,parent_flag,confirm_flag,bad_pcode,good_pcode,path):
     """
     The script changes names of files and directory substituting bad
     pseudo codes (or generic string) with good (user specified) pseudo code.
+
     If <directory> is not specified, it will be assumed as the current directory.
+    If it is a file, the script will read lines inside it assuming they are path
+    and it will run in every specified directory.
+    If it is a squence of paths, it will run over them.
     """
-    click.echo("Replace this message by putting your code into "
-               "pseudo_code_changer.cli.main")
-    click.echo("See click documentation at https://click.palletsprojects.com/")
+
+    if not path: 
+        change_pseudo_code(bad_pcode,good_pcode,
+                           change_files=file_flag,
+                           change_dirs=dir_flag,
+                           change_parent_dir=parent_flag,
+                           confirm=confirm_flag)
+    else:
+        for item in path:
+            if 'txt' in item:
+                if not Path(item).is_file(): 
+                    print(f'File {item} does not exist. Skipping')
+                    continue
+                with open(item,'rb') as infile:
+                    paths = infile.readlines()
+                for local_path in paths:
+                    local_path = local_path.strip()
+                    if not Path(local_path).is_dir():
+                        print(f'Directory {local_path} does not exist. Skipping')
+                        continue
+                    change_pseudo_code(bad_pcode,good_pcode,path=local_path,
+                        change_files=file_flag,
+                        change_dirs=dir_flag,
+                        change_parent_dir=parent_flag,
+                        confirm=confirm_flag)
+            else:
+                change_pseudo_code(bad_pcode,good_pcode,path=item,
+                    change_files=file_flag,
+                    change_dirs=dir_flag,
+                    change_parent_dir=parent_flag,
+                    confirm=confirm_flag)                
+
     return 0
 
 
