@@ -3,12 +3,12 @@ import sys
 import click
 from pathlib import Path
 
-from pseudo_code_changer.pseudo_code_changer import change_pseudo_code
+from pseudo_code_changer import change_pseudo_code
 
 
 @click.command()
 @click.option('-f', '--files', 'file_flag', 
-              is_flag=True, show_default=True, default=True, 
+              is_flag=True, show_default=True, default=False, 
               help='Change file names inside specified directory')
 @click.option('-r', '--dirs', 'dir_flag', 
               is_flag=True, show_default=True, default=False, 
@@ -22,7 +22,7 @@ from pseudo_code_changer.pseudo_code_changer import change_pseudo_code
 @click.argument('bad_pcode', nargs=1, metavar='<bad_pseudo_code>')
 @click.argument('good_pcode',nargs=1, metavar='<good_pseudo_code>')
 @click.argument('path', nargs=-1, metavar='<directory>') 
-def main(file_flag,dir_flag,parent_flag,confirm_flag,bad_pcode,good_pcode,path):
+def main(bad_pcode,good_pcode,path,file_flag,dir_flag,parent_flag,confirm_flag):
     """
     The script changes names of files and directory substituting bad
     pseudo codes (or generic string) with good (user specified) pseudo code.
@@ -33,6 +33,11 @@ def main(file_flag,dir_flag,parent_flag,confirm_flag,bad_pcode,good_pcode,path):
     If it is a squence of paths, it will run over them.
     """
 
+    if not (file_flag and dir_flag and parent_flag):
+        print('No options has been specified')
+        print('Check --help and choose -r, -f, -p or a combination of these')
+        return 0
+    
     if not path: 
         change_pseudo_code(bad_pcode,good_pcode,
                            change_files=file_flag,

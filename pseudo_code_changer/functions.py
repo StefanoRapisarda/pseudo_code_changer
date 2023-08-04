@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import random
 
-from pseudo_code_changer.my_logging import LoggingWrapper
+from my_logging import LoggingWrapper
 
 def pcode_generator():
     letter = random.choice(['A', 'B'])
