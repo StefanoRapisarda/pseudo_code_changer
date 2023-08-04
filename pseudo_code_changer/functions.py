@@ -1,7 +1,13 @@
 import os
 from pathlib import Path
+import random
 
-from my_logging import LoggingWrapper
+from pseudo_code_changer.my_logging import LoggingWrapper
+
+def pcode_generator():
+    letter = random.choice(['A', 'B'])
+    digits = random.randint(10000, 99999)
+    return f'{letter}{digits}'
 
 def change_names(old_string,new_string,path=Path.cwd(),
                  opt='f',confirm=True):
@@ -35,13 +41,13 @@ def change_names(old_string,new_string,path=Path.cwd(),
 
         proceed = True
         
-        mylogging.info('Replacing summary')
+        mylogging.info('\nReplacing summary')
         mylogging.info('-'*72)
         mylogging.info(f'Replacing {opt_descr}')
         mylogging.info(f'Directory: {path}')
         for i,(old,new) in enumerate(zip(old_names,new_names)):
             mylogging.info(f'{i+1}) {old} ---> {new}')
-        mylogging.info('-'*72+'\n')
+        mylogging.info('-'*72)
 
         if confirm:
             ans = input('Do you want to proceed?').strip().lower()
@@ -49,7 +55,7 @@ def change_names(old_string,new_string,path=Path.cwd(),
 
         if proceed:
             for i,(old,new) in enumerate(zip(old_names,new_names)):
-                os.rename(old,new)
+                os.rename(path/old,path/new)
             mylogging.info('Done!\n')
 
         return 1
@@ -70,10 +76,14 @@ def change_parent_dir_name(old_string,new_string,path=Path.cwd(),
     # Changing name of current dir
     if old_string in path.name:
         proceed = True
+
+        mylogging.info('\nReplacing summary')
+        mylogging.info('-'*72)
         new_parent_dir = path.parent / path.name.replace(old_string,new_string)
         
         mylogging.info('Replacing parent directory')
         mylogging.info(f'{path} --> {new_parent_dir}')
+        mylogging.info('-'*72)
     
         if confirm:
             ans = input('Do you want to proceed?').strip().lower()
