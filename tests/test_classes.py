@@ -1,5 +1,5 @@
 import pytest
-from pseudo_code_changer.classes import PseudoCode
+from ..classes import PseudoCode
 
 class TestPseudoCode:
     def test_empty_code(self):

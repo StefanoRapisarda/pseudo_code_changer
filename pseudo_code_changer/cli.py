@@ -3,7 +3,7 @@ import sys
 import click
 from pathlib import Path
 
-from pseudo_code_changer import change_pseudo_code
+from pseudo_code_changer.pseudo_code_changer import change_pseudo_code
 
 
 @click.command()

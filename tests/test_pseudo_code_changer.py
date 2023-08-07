@@ -7,8 +7,8 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from pseudo_code_changer.pseudo_code_changer import change_pseudo_code
-from pseudo_code_changer.functions import pcode_generator
+from ..pseudo_code_changer import change_pseudo_code
+from ..functions import pcode_generator
 # from pseudo_code_changer import cli
 
 CONTENT = "content"

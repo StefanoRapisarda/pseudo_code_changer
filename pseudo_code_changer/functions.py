@@ -3,7 +3,7 @@ from pathlib import Path
 import random
 import uuid
 
-from pseudo_code_changer.my_logging import LoggingWrapper
+from my_logging import LoggingWrapper
 
 CONTENT = "content"
 
@@ -27,6 +27,8 @@ def make_dummy_dir_tree(text='',path = Path.cwd(), make_parent=True,
     containing (if specified) a certain string. This is to be used 
     when testing pseudo_code_changer
     '''
+
+    if type(path) == str: path = Path(path)
 
     if make_parent:
         if text_in_parent: 
@@ -72,7 +74,7 @@ def change_names(old_string,new_string,path=Path.cwd(),
     mylogging = LoggingWrapper()
 
     if opt == 'f': 
-        items = [f'{item.name}' for item in path.iterdir() if not item.is_dir()]
+        items = [f'{item.name}' for item in path.iterdir() if item.is_file()]
         opt_descr = 'Files'
     elif opt == 'd':
         items = [f'{item.name}' for item in path.iterdir() if item.is_dir()]
