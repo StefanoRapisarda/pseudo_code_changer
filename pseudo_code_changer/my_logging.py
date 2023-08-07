@@ -1,4 +1,6 @@
+import sys
 import logging
+import tkinter as tk
 import datetime
 import pathlib
 
@@ -126,7 +128,7 @@ def get_logger_name(process_name):
     '''
     Attach date to process_name
     '''
-    now = datetime.now()
+    now = datetime.datetime.now()
     date = ('%d_%d_%d') % (now.day,now.month,now.year)
     time = ('%d_%d') % (now.hour,now.minute)
 
@@ -191,3 +193,8 @@ class LoggingWrapper:
             logging.debug(message)
         else:
             print('DEBUG: {}: {}'.format(self.eval_time(),message))
+
+if __name__ == '__main__':
+    process_name = 'test'
+    name = get_logger_name(process_name)
+    print(name)

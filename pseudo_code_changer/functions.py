@@ -1,8 +1,61 @@
 import os
 from pathlib import Path
 import random
+import uuid
 
-from my_logging import LoggingWrapper
+from pseudo_code_changer.my_logging import LoggingWrapper
+
+CONTENT = "content"
+
+def make_fake_name(text=''):
+    '''
+    Generate a fake name containing the specified text
+    '''
+    random_name = str(uuid.uuid4())
+    if text:
+        n = len(random_name)
+        i = random.randint(0,n-1)
+        name = random_name[:i] + text + random_name[i:]
+    else:
+        name = random_name
+    return name
+
+def make_dummy_dir_tree(text='',path = Path.cwd(), make_parent=True,
+                        text_in_parent=False,text_in_files=False, text_in_dirs=False):
+    '''
+    It creates a directory containing other directories and text files
+    containing (if specified) a certain string. This is to be used 
+    when testing pseudo_code_changer
+    '''
+
+    if make_parent:
+        if text_in_parent: 
+            parent_name = make_fake_name(text)
+        else:
+            parent_name = make_fake_name()
+        parent = path/parent_name
+        parent.mkdir()
+    else:
+        parent = path
+
+    for d in range(3):
+        if text_in_dirs and text:
+            dir_name = make_fake_name(text)
+        else:
+            dir_name = make_fake_name()
+        dir_full_path = parent/dir_name
+        dir_full_path.mkdir()
+
+    file_exts = ['.pdf','.txt','.qmd','.doc','.jpeg','.py','.R','.md']
+    for f in range(3):
+        if text_in_files and text:
+            file_name = make_fake_name(text) + random.choice(file_exts)
+        else:
+            file_name = make_fake_name() + random.choice(file_exts)
+        file_full_path = parent/file_name
+        file_full_path.write_text(CONTENT)
+
+    return parent
 
 def pcode_generator():
     letter = random.choice(['A', 'B'])
@@ -93,7 +146,7 @@ def change_parent_dir_name(old_string,new_string,path=Path.cwd(),
             os.rename(path,new_parent_dir)
             mylogging.info('Done!'+'\n')
 
-        return 1
+        return new_parent_dir
     else:
         mylogging.info('Your old string is not contained in the parent directory')
-        return 0
+        return path
